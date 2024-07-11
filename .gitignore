@@ -5,6 +5,9 @@
 cmake-build-debug
 CMakeLists.txt
 
+# Project's binary file
+keyfilter
+
 # Prerequisites
 *.d
 
