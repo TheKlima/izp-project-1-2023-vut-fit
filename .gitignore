@@ -1,3 +1,10 @@
+# My own stuff
+
+# CLion's generated stuff
+.idea
+cmake-build-debug
+CMakeLists.txt
+
 # Prerequisites
 *.d
 
