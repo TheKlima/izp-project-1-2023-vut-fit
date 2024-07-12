@@ -2,9 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 
-#define MAX_ADDRESS_LENGTH 100
-#define MAX_ADDRESS_BUFFER_LENGTH (MAX_ADDRESS_LENGTH + 1) // + '\0'
+#define MAX_ADDRESS_STR_LENGTH 100
+#define MAX_ADDRESS_BUFFER_LENGTH (MAX_ADDRESS_STR_LENGTH + 1) // + '\0'
 
 #define MAX_INPUT_ADDRESSES_COUNT 1000
 
@@ -15,12 +16,35 @@ bool isValidArgCount(int arg_count)
 
 bool isValidArgLength(char* arg)
 {
-    return strlen(arg) <= MAX_ADDRESS_LENGTH;
+    return strlen(arg) <= MAX_ADDRESS_STR_LENGTH;
 }
 
 bool isValidArg(int arg_count, char* arg)
 {
     return isValidArgCount(arg_count) && (arg_count == 0 || isValidArgLength(arg));
+}
+
+bool isValidInputAddress(char* address)
+{
+    bool contains_alpha_char = false;
+    int address_str_length = strlen(address);
+    
+    for(int i = 0; i < address_str_length; ++i)
+    {
+        if(isalpha(address[i]))
+        {
+            contains_alpha_char = true;
+            break;
+        }
+    }
+    
+    if(!contains_alpha_char || (address_str_length == 101 && address[address_str_length - 1] != '\n'))
+    {
+        return false;
+    }
+    
+    address[address_str_length - 1] = '\0';
+    return true;
 }
 
 bool parseInputAddresses(char input_addresses[][MAX_ADDRESS_BUFFER_LENGTH + 1], int* input_addresses_count)
