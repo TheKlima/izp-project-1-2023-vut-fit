@@ -3,9 +3,9 @@
 
 #define MAX_ADDRESS_LENGTH 100
 
-bool isValidArgc(int argc)
+bool isValidArgCount(int arg_count)
 {
-    return argc <= 1;
+    return arg_count <= 1;
 }
 
 bool isValidArgLength(char* arg)
@@ -13,7 +13,12 @@ bool isValidArgLength(char* arg)
     return strlen(arg) <= MAX_ADDRESS_LENGTH;
 }
 
-int main()
+bool isValidArg(int arg_count, char* arg)
+{
+    return isValidArgCount(arg_count) && (arg_count == 0 || isValidArgLength(arg));
+}
+
+int main(int argc, char** argv)
 {
     return 0;
 }
