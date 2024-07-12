@@ -8,6 +8,9 @@ CMakeLists.txt
 # Project's binary file
 keyfilter
 
+# Program's input (for testing purposes)
+input
+
 # Prerequisites
 *.d
 
