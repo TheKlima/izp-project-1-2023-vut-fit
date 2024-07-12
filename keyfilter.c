@@ -6,6 +6,8 @@
 #define MAX_ADDRESS_LENGTH 100
 #define MAX_ADDRESS_BUFFER_LENGTH (MAX_ADDRESS_LENGTH + 1) // + '\0'
 
+#define MAX_INPUT_ADDRESSES_COUNT 1000
+
 bool isValidArgCount(int arg_count)
 {
     return arg_count <= 1;
@@ -21,6 +23,16 @@ bool isValidArg(int arg_count, char* arg)
     return isValidArgCount(arg_count) && (arg_count == 0 || isValidArgLength(arg));
 }
 
+bool parseInputAddresses(char input_addresses[][MAX_ADDRESS_BUFFER_LENGTH + 1], int* input_addresses_count)
+{
+    while(fgets(input_addresses[*input_addresses_count], MAX_ADDRESS_BUFFER_LENGTH + 1, stdin) != NULL)
+    {
+        ++(*input_addresses_count);
+    }
+    
+    return true;
+}
+
 int main(int argc, char** argv)
 {
     if(!isValidArg(argc - 1, argv[1]))
@@ -33,6 +45,15 @@ int main(int argc, char** argv)
     if(argc - 1 != 0)
     {
         strcpy(searched_address, argv[1]);
+    }
+    
+    char input_addresses[MAX_INPUT_ADDRESSES_COUNT][MAX_ADDRESS_BUFFER_LENGTH + 1]; // + '\n'
+    int input_addresses_count = 0;
+    
+    if(!parseInputAddresses(input_addresses, &input_addresses_count))
+    {
+        // TODO print
+        return EXIT_FAILURE;
     }
     
     return EXIT_SUCCESS;
