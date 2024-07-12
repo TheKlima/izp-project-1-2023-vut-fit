@@ -51,6 +51,11 @@ bool parseInputAddresses(char input_addresses[][MAX_ADDRESS_BUFFER_LENGTH + 1], 
 {
     while(fgets(input_addresses[*input_addresses_count], MAX_ADDRESS_BUFFER_LENGTH + 1, stdin) != NULL)
     {
+        if(*input_addresses_count == MAX_INPUT_ADDRESSES_COUNT || !isValidInputAddress(input_addresses[*input_addresses_count]))
+        {
+            return false;
+        }
+        
         ++(*input_addresses_count);
     }
     
@@ -76,7 +81,7 @@ int main(int argc, char** argv)
     
     if(!parseInputAddresses(input_addresses, &input_addresses_count))
     {
-        // TODO print
+        fprintf(stderr, "Error! Too many input addresses provided or invalid input address provided.\n");
         return EXIT_FAILURE;
     }
     
