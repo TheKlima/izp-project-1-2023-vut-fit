@@ -24,21 +24,24 @@ bool isValidArg(int arg_count, char* arg)
     return isValidArgCount(arg_count) && (arg_count == 0 || isValidArgLength(arg));
 }
 
-bool isValidInputAddress(char* address)
+bool addressContainsAlphaChar(char* address, int address_str_length)
 {
-    bool contains_alpha_char = false;
-    int address_str_length = strlen(address);
-    
     for(int i = 0; i < address_str_length; ++i)
     {
         if(isalpha(address[i]))
         {
-            contains_alpha_char = true;
-            break;
+            return true;
         }
     }
+
+    return false;
+}
+
+bool isValidInputAddress(char* address)
+{
+    int address_str_length = strlen(address);
     
-    if(!contains_alpha_char || (address_str_length == 101 && address[address_str_length - 1] != '\n'))
+    if(!addressContainsAlphaChar(address, address_str_length) || (address_str_length == 101 && address[address_str_length - 1] != '\n'))
     {
         return false;
     }
