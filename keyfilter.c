@@ -9,6 +9,11 @@
 
 #define MAX_INPUT_ADDRESSES_COUNT 1000
 
+typedef struct {
+    char input_addresses[MAX_INPUT_ADDRESSES_COUNT][MAX_ADDRESS_BUFFER_LENGTH + 1]; // + '\n'
+    int input_addresses_count;
+} Addresses_database;
+
 bool isValidArgCount(int arg_count)
 {
     return arg_count <= 1;
@@ -50,16 +55,17 @@ bool isValidInputAddress(char* address)
     return true;
 }
 
-bool parseInputAddresses(char input_addresses[][MAX_ADDRESS_BUFFER_LENGTH + 1], int* input_addresses_count)
+bool parseInputAddresses(Addresses_database* addresses_database)
 {
-    while(fgets(input_addresses[*input_addresses_count], MAX_ADDRESS_BUFFER_LENGTH + 1, stdin) != NULL)
+    while(fgets(addresses_database->input_addresses[addresses_database->input_addresses_count], MAX_ADDRESS_BUFFER_LENGTH + 1, stdin) != NULL)
     {
-        if(*input_addresses_count == MAX_INPUT_ADDRESSES_COUNT || !isValidInputAddress(input_addresses[*input_addresses_count]))
+        if(addresses_database->input_addresses_count == MAX_INPUT_ADDRESSES_COUNT ||
+           !isValidInputAddress(addresses_database->input_addresses[addresses_database->input_addresses_count]))
         {
             return false;
         }
-        
-        ++(*input_addresses_count);
+
+        ++(addresses_database->input_addresses_count);
     }
     
     return true;
@@ -79,10 +85,9 @@ int main(int argc, char** argv)
         strcpy(searched_address, argv[1]);
     }
     
-    char input_addresses[MAX_INPUT_ADDRESSES_COUNT][MAX_ADDRESS_BUFFER_LENGTH + 1]; // + '\n'
-    int input_addresses_count = 0;
+    Addresses_database addresses_database = {};
     
-    if(!parseInputAddresses(input_addresses, &input_addresses_count))
+    if(!parseInputAddresses(&addresses_database))
     {
         fprintf(stderr, "Error! Too many input addresses provided or invalid input address provided.\n");
         return EXIT_FAILURE;
