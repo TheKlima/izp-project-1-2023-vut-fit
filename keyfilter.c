@@ -58,6 +58,14 @@ bool isValidInputAddress(char* address)
     return true;
 }
 
+void strToUpper(char* str)
+{
+    for(int i = 0; str[i] != '\0'; ++i)
+    {
+        str[i] = toupper(str[i]);
+    }
+}
+
 bool parseInputAddresses(Addresses_database* addresses_database)
 {
     while(fgets(addresses_database->input_addresses[addresses_database->input_addresses_count], MAX_ADDRESS_BUFFER_LENGTH + 1, stdin) != NULL)
@@ -68,6 +76,7 @@ bool parseInputAddresses(Addresses_database* addresses_database)
             return false;
         }
 
+        strToUpper(addresses_database->input_addresses[addresses_database->input_addresses_count]);
         ++(addresses_database->input_addresses_count);
     }
     
