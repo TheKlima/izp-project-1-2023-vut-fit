@@ -9,6 +9,9 @@
 
 #define MAX_INPUT_ADDRESSES_COUNT 1000
 
+#define ASCII_TABLE_SIZE 128
+#define NON_PRINTABLE_ASCII_CHARS_COUNT 32
+
 typedef struct {
     char input_addresses[MAX_INPUT_ADDRESSES_COUNT][MAX_ADDRESS_BUFFER_LENGTH + 1]; // + '\n'
     int input_addresses_count;
@@ -71,6 +74,23 @@ bool parseInputAddresses(Addresses_database* addresses_database)
     return true;
 }
 
+void runVirtualKeyboard(char* searched_address, Addresses_database* addresses_database)
+{
+    bool possible_chars[ASCII_TABLE_SIZE - NON_PRINTABLE_ASCII_CHARS_COUNT] = {false, };
+    
+    int first_matched_address_idx = -1;
+    int matched_addresses_count = 0; 
+    
+    int searched_address_str_length = strlen(searched_address);
+    for(int i = 0; i < addresses_database->input_addresses_count; ++i)
+    {
+        if(strncmp(searched_address, addresses_database->input_addresses[i], searched_address_str_length) == 0)
+        {
+            
+        }
+    }
+}
+
 int main(int argc, char** argv)
 {
     if(!isValidArg(argc - 1, argv[1]))
@@ -92,6 +112,8 @@ int main(int argc, char** argv)
         fprintf(stderr, "Error! Too many input addresses provided or invalid input address provided.\n");
         return EXIT_FAILURE;
     }
+    
+    runVirtualKeyboard(searched_address, &addresses_database);
     
     return EXIT_SUCCESS;
 }
