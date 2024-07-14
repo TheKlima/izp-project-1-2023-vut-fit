@@ -17,6 +17,8 @@ typedef struct {
     int input_addresses_count;
 } Addresses_database;
 
+void strToUpper(char* str);
+
 bool isValidArgCount(int arg_count)
 {
     return arg_count <= 1;
@@ -30,6 +32,15 @@ bool isValidArgLength(char* arg)
 bool isValidArg(int arg_count, char* arg)
 {
     return isValidArgCount(arg_count) && (arg_count == 0 || isValidArgLength(arg));
+}
+
+void getSearchedAddress(int arg_count, char** argv, char* searched_address)
+{
+    if(arg_count != 0)
+    {
+        strcpy(searched_address, argv[1]);
+        strToUpper(searched_address);
+    }
 }
 
 bool addressContainsAlphaChar(char* address, int address_str_length)
@@ -117,22 +128,19 @@ int main(int argc, char** argv)
         fprintf(stderr, "Error! Wrong number of program arguments (expected 0 or 1) or invalid length of first argument.\n");
         return EXIT_FAILURE;
     }
-    
+
     char searched_address[MAX_ADDRESS_BUFFER_LENGTH] = {'\0', };
-    if(argc - 1 != 0)
-    {
-        strcpy(searched_address, argv[1]);
-    }
+    getSearchedAddress(argc - 1, argv, searched_address);
     
     Addresses_database addresses_database = {};
-    
+
     if(!parseInputAddresses(&addresses_database))
     {
         fprintf(stderr, "Error! Too many input addresses provided or invalid input address provided.\n");
         return EXIT_FAILURE;
     }
-    
+
     runVirtualKeyboard(searched_address, &addresses_database);
-    
+
     return EXIT_SUCCESS;
 }
