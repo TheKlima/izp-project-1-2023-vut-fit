@@ -96,6 +96,28 @@ void printPossibleChars(bool* possible_chars)
     putchar('\n');
 }
 
+void updateVirtualKeyboardStats(Virtual_keyboard_stats* stats, char* current_address, char* searched_address, int searched_address_str_length)
+{
+    if(strncmp(searched_address, current_address, searched_address_str_length) == 0)
+    {
+        if(stats->matched_addresses_count == 0)
+        {
+            strcpy(stats->first_matched_address, current_address);
+        }
+
+        if(!isFullyMatchedAddress(current_address, searched_address_str_length))
+        {
+            stats->possible_chars[current_address[searched_address_str_length] - NON_PRINTABLE_ASCII_CHARS_COUNT] = true;
+        }
+        else
+        {
+            printf("Found: %s\n", searched_address);
+        }
+
+        ++(stats->matched_addresses_count);
+    }
+}
+
 bool runVirtualKeyboard(char* searched_address)
 {
     Virtual_keyboard_stats stats = {};
@@ -113,25 +135,7 @@ bool runVirtualKeyboard(char* searched_address)
         }
 
         strToUpper(current_address);
-
-        if(strncmp(searched_address, current_address, searched_address_str_length) == 0)
-        {
-            if(stats.matched_addresses_count == 0)
-            {
-                strcpy(stats.first_matched_address, current_address);
-            }
-
-            if(!isFullyMatchedAddress(current_address, searched_address_str_length))
-            {
-                stats.possible_chars[current_address[searched_address_str_length] - NON_PRINTABLE_ASCII_CHARS_COUNT] = true;
-            }
-            else
-            {
-                printf("Found: %s\n", searched_address);
-            }
-
-            ++(stats.matched_addresses_count);
-        }
+        updateVirtualKeyboardStats(&stats, current_address, searched_address, searched_address_str_length);
     }
     
     if(stats.matched_addresses_count > 1)
