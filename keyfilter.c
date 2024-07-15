@@ -12,6 +12,12 @@
 #define ASCII_TABLE_SIZE 128
 #define NON_PRINTABLE_ASCII_CHARS_COUNT 32
 
+typedef struct {
+    char first_matched_address[MAX_ADDRESS_BUFFER_LENGTH];
+    bool possible_chars[ASCII_TABLE_SIZE - NON_PRINTABLE_ASCII_CHARS_COUNT];
+    int matched_addresses_count;
+} Virtual_keyboard_stats;
+
 void strToUpper(char* str);
 
 bool isValidArgCount(int arg_count)
@@ -72,23 +78,6 @@ void strToUpper(char* str)
     }
 }
 
-bool parseInputAddresses(Addresses_database* addresses_database)
-{
-    while(fgets(addresses_database->input_addresses[addresses_database->input_addresses_count], MAX_ADDRESS_BUFFER_LENGTH + 1, stdin) != NULL)
-    {
-        if(addresses_database->input_addresses_count == MAX_INPUT_ADDRESSES_COUNT ||
-           !isValidInputAddress(addresses_database->input_addresses[addresses_database->input_addresses_count]))
-        {
-            return false;
-        }
-
-        strToUpper(addresses_database->input_addresses[addresses_database->input_addresses_count]);
-        ++(addresses_database->input_addresses_count);
-    }
-    
-    return true;
-}
-
 bool isFullyMatchedAddress(char* address_from_database, int searched_address_str_length)
 {
     return address_from_database[searched_address_str_length - 1] != '\0' &&
@@ -109,55 +98,9 @@ void printPossibleChars(bool* possible_chars)
     putchar('\n');
 }
 
-void runVirtualKeyboard(char* searched_address, Addresses_database* addresses_database)
-{
-    bool possible_chars[ASCII_TABLE_SIZE - NON_PRINTABLE_ASCII_CHARS_COUNT] = {false, };
-    
-    int first_matched_address_idx = -1;
-    int matched_addresses_count = 0; 
-    
-    int searched_address_str_length = strlen(searched_address);
-    for(int i = 0; i < addresses_database->input_addresses_count; ++i)
-    {
-        if(strncmp(searched_address, addresses_database->input_addresses[i], searched_address_str_length) == 0)
-        {
-            if(matched_addresses_count == 0)
-            {
-                first_matched_address_idx = i;
-            }
-            
-            if(!isFullyMatchedAddress(addresses_database->input_addresses[i], searched_address_str_length))
-            {
-                possible_chars[addresses_database->input_addresses[i][searched_address_str_length] - NON_PRINTABLE_ASCII_CHARS_COUNT] = true;
-            }
-            else
-            {
-                printf("Found: %s\n", searched_address);
-            }
-            
-            ++matched_addresses_count;
-        }
-    }
-    
-    if(matched_addresses_count > 1)
-    {
-        printPossibleChars(possible_chars);
-    }
-    else if(matched_addresses_count == 1)
-    {
-        if(!isFullyMatchedAddress(addresses_database->input_addresses[first_matched_address_idx], searched_address_str_length))
-        {
-            printf("Found: %s\n", addresses_database->input_addresses[first_matched_address_idx]);
-        }
-    }
-    else
-    {
-        printf("Not found\n");
-    }
-}
-
 bool runVirtualKeyboard(char* searched_address)
 {
+    Virtual_keyboard_stats stats = {};
 }
 
 int main(int argc, char** argv)
@@ -170,12 +113,12 @@ int main(int argc, char** argv)
 
     char searched_address[MAX_ADDRESS_BUFFER_LENGTH] = {'\0', };
     getSearchedAddress(argc - 1, argv, searched_address);
-    
+
     if(!runVirtualKeyboard(searched_address))
     {
         fprintf(stderr, "Error! Too many input addresses provided or invalid input address provided.\n");
         return EXIT_FAILURE;
     }
-    
+
     return EXIT_SUCCESS;
 }
