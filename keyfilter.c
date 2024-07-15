@@ -112,13 +112,37 @@ void runVirtualKeyboard(char* searched_address, Addresses_database* addresses_da
     {
         if(strncmp(searched_address, addresses_database->input_addresses[i], searched_address_str_length) == 0)
         {
-            if(isFullyMatchedAddress(addresses_database->input_addresses[i], searched_address_str_length))
+            if(matched_addresses_count == 0)
+            {
+                first_matched_address_idx = i;
+            }
+            
+            if(!isFullyMatchedAddress(addresses_database->input_addresses[i], searched_address_str_length))
+            {
+                possible_chars[addresses_database->input_addresses[i][searched_address_str_length] - NON_PRINTABLE_ASCII_CHARS_COUNT] = true;
+            }
+            else
             {
                 printf("Found (fully matched): %s\n", searched_address);
             }
             
+            ++matched_addresses_count;
         }
     }
+    
+    if(matched_addresses_count > 1)
+    {
+        
+    }
+    else if(matched_addresses_count == 1)
+    {
+        printf("Found: %s\n", addresses_database->input_addresses[first_matched_address_idx]);
+    }
+    else
+    {
+        printf("Not found\n");
+    }
+
 }
 
 int main(int argc, char** argv)
