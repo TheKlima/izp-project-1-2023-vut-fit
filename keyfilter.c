@@ -14,6 +14,7 @@ typedef struct {
     char first_matched_address[MAX_ADDRESS_BUFFER_LENGTH];
     bool possible_chars[ASCII_TABLE_SIZE - NON_PRINTABLE_ASCII_CHARS_COUNT];
     int matched_addresses_count;
+    bool is_fully_matched;
 } Virtual_keyboard_stats;
 
 void strToUpper(char* str);
@@ -113,22 +114,27 @@ void updateVirtualKeyboardStats(Virtual_keyboard_stats* stats, char* current_add
         }
         else
         {
-            printf("Found: %s\n", searched_address);
+            stats->is_fully_matched = true;
         }
 
         ++(stats->matched_addresses_count);
     }
 }
 
-void printVirtualKeyboardOutput(Virtual_keyboard_stats* stats, int searched_address_str_length)
+void printVirtualKeyboardOutput(Virtual_keyboard_stats* stats, char* searched_address)
 {
+    if(stats->is_fully_matched)
+    {
+        printf("Found: %s\n", searched_address);
+    }
+    
     if(stats->matched_addresses_count > 1)
     {
         printPossibleChars(stats->possible_chars);
     }
     else if(stats->matched_addresses_count == 1)
     {
-        if(!isFullyMatchedAddress(stats->first_matched_address, searched_address_str_length))
+        if(!stats->is_fully_matched)
         {
             printf("Found: %s\n", stats->first_matched_address);
         }
@@ -159,7 +165,7 @@ bool runVirtualKeyboard(char* searched_address)
         updateVirtualKeyboardStats(&stats, current_address, searched_address, searched_address_str_length);
     }
 
-    printVirtualKeyboardOutput(&stats, searched_address_str_length);
+    printVirtualKeyboardOutput(&stats, searched_address);
     return true;
 }
 
