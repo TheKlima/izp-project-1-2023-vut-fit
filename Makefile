@@ -1,15 +1,12 @@
 CC = gcc
-CFLAGS = -std=c11 -Wall -Wextra # -Werror I will use this flag only when I release for convenience
+CFLAGS = -std=c11 -Wall -Wextra  -Werror
 
 DST = keyfilter
 SRC = $(DST).c
-OBJ = $(DST).o
 
 all: $(DST)
 
-$(DST): $(OBJ)
-
-$(OBJ): $(SRC)
+$(DST): $(SRC)
 
 clean:
-	rm $(DST) $(OBJ)
+	rm $(DST)
