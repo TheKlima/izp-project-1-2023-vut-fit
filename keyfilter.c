@@ -99,6 +99,57 @@ void printPossibleChars(bool* possible_chars)
 bool runVirtualKeyboard(char* searched_address)
 {
     Virtual_keyboard_stats stats = {};
+
+    char current_address[MAX_ADDRESS_BUFFER_LENGTH + 1] = {'\0', };
+
+    int searched_address_str_length = strlen(searched_address);
+
+    while(fgets(current_address, MAX_ADDRESS_BUFFER_LENGTH + 1, stdin) != NULL)
+    {
+        if(!isValidInputAddress(current_address))
+        {
+            return false;
+        }
+
+        strToUpper(current_address);
+
+        if(strncmp(searched_address, current_address, searched_address_str_length) == 0)
+        {
+            if(stats.matched_addresses_count == 0)
+            {
+                strcpy(stats.first_matched_address, current_address);
+            }
+
+            if(!isFullyMatchedAddress(current_address, searched_address_str_length))
+            {
+                stats.possible_chars[current_address[searched_address_str_length] - NON_PRINTABLE_ASCII_CHARS_COUNT] = true;
+            }
+            else
+            {
+                printf("Found: %s\n", searched_address);
+            }
+
+            ++(stats.matched_addresses_count);
+        }
+    }
+    
+    if(stats.matched_addresses_count > 1)
+    {
+        printPossibleChars(stats.possible_chars);
+    }
+    else if(stats.matched_addresses_count == 1)
+    {
+        if(!isFullyMatchedAddress(stats.first_matched_address, searched_address_str_length))
+        {
+            printf("Found: %s\n", stats.first_matched_address);
+        }
+    }
+    else
+    {
+        printf("Not found\n");
+    }
+
+    return true;
 }
 
 int main(int argc, char** argv)
