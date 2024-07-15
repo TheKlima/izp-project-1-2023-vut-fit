@@ -108,6 +108,7 @@ bool runVirtualKeyboard(char* searched_address)
     {
         if(!isValidInputAddress(current_address))
         {
+            fprintf(stderr, "Error! Invalid input address provided.\n");
             return false;
         }
 
@@ -162,12 +163,6 @@ int main(int argc, char** argv)
 
     char searched_address[MAX_ADDRESS_BUFFER_LENGTH] = {'\0', };
     getSearchedAddress(argc - 1, argv, searched_address);
-
-    if(!runVirtualKeyboard(searched_address))
-    {
-        fprintf(stderr, "Error! Too many input addresses provided or invalid input address provided.\n");
-        return EXIT_FAILURE;
-    }
-
-    return EXIT_SUCCESS;
+    
+    return runVirtualKeyboard(searched_address);
 }
