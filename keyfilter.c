@@ -18,6 +18,8 @@ typedef struct {
 
 void strToUpper(char* str);
 
+bool addressContainsAlphaChar(char* address);
+
 bool isValidArgCount(int arg_count)
 {
     return arg_count <= 1;
@@ -42,9 +44,9 @@ void getSearchedAddress(int arg_count, char** argv, char* searched_address)
     }
 }
 
-bool addressContainsAlphaChar(char* address, int address_str_length)
+bool addressContainsAlphaChar(char* address)
 {
-    for(int i = 0; i < address_str_length; ++i)
+    for(int i = 0; address[i] != '\0'; ++i)
     {
         if(isalpha(address[i]))
         {
@@ -59,7 +61,7 @@ bool isValidInputAddress(char* address)
 {
     int address_str_length = strlen(address);
     
-    if(!addressContainsAlphaChar(address, address_str_length) || (address_str_length == 101 && address[address_str_length - 1] != '\n'))
+    if(!addressContainsAlphaChar(address) || (address_str_length == 101 && address[address_str_length - 1] != '\n'))
     {
         return false;
     }
