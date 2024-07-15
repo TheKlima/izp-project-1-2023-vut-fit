@@ -100,6 +100,20 @@ bool isFullyMatchedAddress(char* address_from_database, int searched_address_str
            address_from_database[searched_address_str_length] == '\0';
 }
 
+void printPossibleChars(bool* possible_chars)
+{
+    printf("Enable: ");
+    for(int i = 0; i < ASCII_TABLE_SIZE - NON_PRINTABLE_ASCII_CHARS_COUNT; ++i)
+    {
+        if(possible_chars[i])
+        {
+            putchar(i + NON_PRINTABLE_ASCII_CHARS_COUNT);
+        }
+    }
+
+    putchar('\n');
+}
+
 void runVirtualKeyboard(char* searched_address, Addresses_database* addresses_database)
 {
     bool possible_chars[ASCII_TABLE_SIZE - NON_PRINTABLE_ASCII_CHARS_COUNT] = {false, };
@@ -123,7 +137,7 @@ void runVirtualKeyboard(char* searched_address, Addresses_database* addresses_da
             }
             else
             {
-                printf("Found (fully matched): %s\n", searched_address);
+                printf("Found: %s\n", searched_address);
             }
             
             ++matched_addresses_count;
@@ -132,17 +146,19 @@ void runVirtualKeyboard(char* searched_address, Addresses_database* addresses_da
     
     if(matched_addresses_count > 1)
     {
-        
+        printPossibleChars(possible_chars);
     }
     else if(matched_addresses_count == 1)
     {
-        printf("Found: %s\n", addresses_database->input_addresses[first_matched_address_idx]);
+        if(!isFullyMatchedAddress(addresses_database->input_addresses[first_matched_address_idx], searched_address_str_length))
+        {
+            printf("Found: %s\n", addresses_database->input_addresses[first_matched_address_idx]);
+        }
     }
     else
     {
         printf("Not found\n");
     }
-
 }
 
 int main(int argc, char** argv)
