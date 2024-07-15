@@ -32,7 +32,7 @@ bool isValidArgLength(char* arg)
 
 bool isValidArg(int arg_count, char* arg)
 {
-    return isValidArgCount(arg_count) && (arg_count == 0 || isValidArgLength(arg));
+    return isValidArgCount(arg_count) && (arg_count == 0 || (isValidArgLength(arg) && addressContainsAlphaChar(arg)));
 }
 
 void getSearchedAddress(int arg_count, char** argv, char* searched_address)
@@ -167,7 +167,7 @@ int main(int argc, char** argv)
 {
     if(!isValidArg(argc - 1, argv[1]))
     {
-        fprintf(stderr, "Error! Wrong number of program arguments (expected 0 or 1) or invalid length of first argument.\n");
+        fprintf(stderr, "Error! Wrong number of program arguments (expected 0 or 1) or was provided invalid argument.\n");
         return EXIT_FAILURE;
     }
 
