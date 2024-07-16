@@ -1,3 +1,10 @@
+// File: keyfilter.c
+// Subject: IZP
+// Project: #1
+// Author: Andrii Klymenko, FIT VUT
+// Login: xklyme00
+// Date: 16.7.2023
+
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
@@ -56,6 +63,7 @@ void getSearchedAddress(int arg_count, char** argv, char* searched_address)
     }
 }
 
+// checks if string contains at least 1 alphabetic character
 bool strContainsAlphaChar(char* str)
 {
     for(int i = 0; str[i] != '\0'; ++i)
@@ -69,6 +77,7 @@ bool strContainsAlphaChar(char* str)
     return false;
 }
 
+// checks if string address contains a valid address, address contains a value returned by fgets()
 bool isValidInputAddress(char* address)
 {
     int address_str_length = strlen(address);
@@ -78,10 +87,11 @@ bool isValidInputAddress(char* address)
         return false;
     }
     
-    address[address_str_length - 1] = '\0';
+    address[address_str_length - 1] = '\0'; // we don't need '\n'
     return true;
 }
 
+// tries to convert all string characters to upper case if possible
 void strToUpper(char* str)
 {
     for(int i = 0; str[i] != '\0'; ++i)
@@ -90,12 +100,15 @@ void strToUpper(char* str)
     }
 }
 
+// checks if searched address and address_from_database are the same (i.e. fully matched) based on searched_address_str_length
+// this function is called when at least partial match is found
 bool isFullyMatchedAddress(char* address_from_database, int searched_address_str_length)
 {
     return address_from_database[searched_address_str_length - 1] != '\0' &&
            address_from_database[searched_address_str_length] == '\0';
 }
 
+// program's output when multiple matched addresses were found
 void printPossibleChars(bool* possible_chars)
 {
     printf("Enable: ");
@@ -110,9 +123,10 @@ void printPossibleChars(bool* possible_chars)
     putchar('\n');
 }
 
+// updates Virtual_keyboard_stats structure's data
 void updateVirtualKeyboardStats(Virtual_keyboard_stats* stats, char* current_address, char* searched_address, int searched_address_str_length)
 {
-    if(strncmp(searched_address, current_address, searched_address_str_length) == 0)
+    if(strncmp(searched_address, current_address, searched_address_str_length) == 0) // check for at least partial match
     {
         if(!isFullyMatchedAddress(current_address, searched_address_str_length))
         {
