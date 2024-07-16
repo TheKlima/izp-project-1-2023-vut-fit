@@ -126,6 +126,11 @@ void printFoundAddress(char* address)
     printf("Found: %s\n", address);
 }
 
+void printNotFound()
+{
+    printf("Not found\n");
+}
+
 void printVirtualKeyboardOutput(Virtual_keyboard_stats* stats, char* searched_address)
 {
     if(stats->is_fully_matched)
@@ -146,7 +151,7 @@ void printVirtualKeyboardOutput(Virtual_keyboard_stats* stats, char* searched_ad
     }
     else
     {
-        printf("Not found\n");
+        printNotFound();
     }
 }
 
