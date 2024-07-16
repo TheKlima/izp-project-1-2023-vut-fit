@@ -10,16 +10,25 @@
 #define ASCII_TABLE_SIZE 128
 #define NON_PRINTABLE_ASCII_CHARS_COUNT 32
 
+// this structure is used for generating virtual keyboard's output
 typedef struct {
+    // it will be printed if only one address was matched, and it wasn't fully matched
     char first_matched_address[MAX_ADDRESS_BUFFER_LENGTH];
+    
+    // specifies what characters to enable when multiple matched addresses were found
+    // non-printable ascii characters are not included here
+    // if(possible_chars[ASCII_CHAR - NON_PRINTABLE_ASCII_CHARS_COUNT]) {enable(ASCII_CHAR);}
     bool possible_chars[ASCII_TABLE_SIZE - NON_PRINTABLE_ASCII_CHARS_COUNT];
+    
+    // used for determining which type of output to print: Found, Enable or Not found
     int matched_addresses_count;
-    bool is_fully_matched;
+    
+    bool is_fully_matched; // specifies if there was found fully matched address
 } Virtual_keyboard_stats;
 
 void strToUpper(char* str);
 
-bool addressContainsAlphaChar(char* address);
+bool strContainsAlphaChar(char* str);
 
 bool isValidArgCount(int arg_count)
 {
@@ -33,9 +42,11 @@ bool isValidArgLength(char* arg)
 
 bool isValidArg(int arg_count, char* arg)
 {
-    return isValidArgCount(arg_count) && (arg_count == 0 || (isValidArgLength(arg) && addressContainsAlphaChar(arg)));
+    return isValidArgCount(arg_count) && (arg_count == 0 || (isValidArgLength(arg) && strContainsAlphaChar(arg)));
 }
 
+// copies searched address from argv to searched_address (if program was run with argument)
+// and makes all its characters upper case if possible
 void getSearchedAddress(int arg_count, char** argv, char* searched_address)
 {
     if(arg_count != 0)
@@ -45,11 +56,11 @@ void getSearchedAddress(int arg_count, char** argv, char* searched_address)
     }
 }
 
-bool addressContainsAlphaChar(char* address)
+bool strContainsAlphaChar(char* str)
 {
-    for(int i = 0; address[i] != '\0'; ++i)
+    for(int i = 0; str[i] != '\0'; ++i)
     {
-        if(isalpha(address[i]))
+        if(isalpha(str[i]))
         {
             return true;
         }
@@ -62,7 +73,7 @@ bool isValidInputAddress(char* address)
 {
     int address_str_length = strlen(address);
     
-    if(!addressContainsAlphaChar(address) || (address_str_length == 101 && address[address_str_length - 1] != '\n'))
+    if(!strContainsAlphaChar(address) || (address_str_length == 101 && address[address_str_length - 1] != '\n'))
     {
         return false;
     }
