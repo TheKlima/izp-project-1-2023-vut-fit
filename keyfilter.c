@@ -64,7 +64,7 @@ void getSearchedAddress(int arg_count, char** argv, char* searched_address)
 }
 
 // ATTENTION: maybe for you, it would be better not to use this function in your project, because some tests may fail due to it
-// however adding this function just seemed logical to me, do I did it
+// however adding this function just seemed logical to me, so I did it
 // checks if string contains at least 1 alphabetic character
 bool strContainsAlphaChar(char* str)
 {
