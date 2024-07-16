@@ -103,11 +103,6 @@ void updateVirtualKeyboardStats(Virtual_keyboard_stats* stats, char* current_add
 {
     if(strncmp(searched_address, current_address, searched_address_str_length) == 0)
     {
-        if(stats->matched_addresses_count == 0)
-        {
-            strcpy(stats->first_matched_address, current_address);
-        }
-
         if(!isFullyMatchedAddress(current_address, searched_address_str_length))
         {
             stats->possible_chars[current_address[searched_address_str_length] - NON_PRINTABLE_ASCII_CHARS_COUNT] = true;
@@ -115,6 +110,11 @@ void updateVirtualKeyboardStats(Virtual_keyboard_stats* stats, char* current_add
         else
         {
             stats->is_fully_matched = true;
+        }
+
+        if(stats->matched_addresses_count == 0 && !stats->is_fully_matched)
+        {
+            strcpy(stats->first_matched_address, current_address);
         }
 
         ++(stats->matched_addresses_count);
